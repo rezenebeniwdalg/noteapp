@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:noteapp/controller/notescreen_controller.dart';
 import 'package:noteapp/view/notescr/widget/notescard.dart';
 
@@ -19,6 +20,9 @@ class _NotesScreenState extends State<NotesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+backgroundColor: Colors.black54,
+
+
       floatingActionButton: FloatingActionButton(onPressed: () {
       custombottomSheet(context: context);
       },
@@ -39,7 +43,7 @@ class _NotesScreenState extends State<NotesScreen> {
             
           },
           onEdit: () {
-            custombottomSheet(context: context ,isedit: true);
+            custombottomSheet(context: context ,isedit: true,index: index);
             setState(() {
               
             });
@@ -50,7 +54,7 @@ class _NotesScreenState extends State<NotesScreen> {
       ),
     );
   }
-  Future<dynamic> custombottomSheet({required BuildContext context, bool isedit = false}){
+  Future<dynamic> custombottomSheet({required BuildContext context, bool isedit = false,int? index}){
     return showModalBottomSheet(
           backgroundColor: Colors.amber,
           isScrollControlled: true,
@@ -89,6 +93,7 @@ class _NotesScreenState extends State<NotesScreen> {
                     )),
                 ), SizedBox(height: 10,),
                   TextFormField(
+                    readOnly: true,
                     controller: _date,
                   decoration: InputDecoration(
                     hintText: "Date",
@@ -98,8 +103,13 @@ class _NotesScreenState extends State<NotesScreen> {
                       borderRadius: BorderRadius.circular(12),
                       
                     ),
-                    suffixIcon: InkWell(onTap: () {
-                      
+                    suffixIcon: InkWell(onTap: ()async {
+                     final slctddatetime= await showDatePicker(context: context, firstDate: DateTime.now(), lastDate: DateTime(2030));
+                     if (slctddatetime != null) {
+                       String formatedDate = DateFormat('dd/MM/yyyy').format(slctddatetime);
+                       _date.text = formatedDate.toString();
+                     }
+                                         setState((){});
                     },child: Icon(Icons.date_range_rounded)),
               ),
               ),
@@ -124,7 +134,17 @@ class _NotesScreenState extends State<NotesScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      if(isedit == true){}
+                      if(isedit == true){
+                         NoteScreenController.editnote(
+                          index: index!,
+                        title: _title.text,
+                        desc: _desc.text,
+                        date: _date.text,
+                        clrindex: slctdclrindex,
+                        
+
+                      );
+                      }
                       else{
                       NoteScreenController.addnote(
                         title: _title.text,
@@ -150,7 +170,11 @@ class _NotesScreenState extends State<NotesScreen> {
                   ),
                    InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                       Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => NotesScreen()));
+                      setState(() {
+                        
+                      });
                     },
                      child: Container(
                       width: 100,

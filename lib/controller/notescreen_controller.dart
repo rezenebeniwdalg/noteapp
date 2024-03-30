@@ -26,5 +26,15 @@ static void addnote(
 static void  deletenote(int index){
   noteslist.removeAt(index);
 }
+static void editnote({required int index,
+required String title,
+required String desc,
+ required String date,
+ int clrindex = 0,}){
+  noteslist[index] = {"title":title,
+"description":desc,
+"date":date,
+"color": clrindex,};
+}
 
 }
