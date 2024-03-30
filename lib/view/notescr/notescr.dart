@@ -78,7 +78,7 @@ class _NotesScreenState extends State<NotesScreen> {
                   Navigator.pop(context);
                 },
                  child: Container(
-                  child: Text("Cancel",style: TextStyle(color: Colors.red),),
+                  child: Text("Cancel ",style: TextStyle(color: Colors.red),),
                                ),
                ),
             ],
